@@ -1,0 +1,43 @@
+Resumo Executivo - Projeto Terapia Pra Todos
+Sobre o Projeto:
+
+Nome: Terapia Pra Todos: Cuidar da Saúde Mental é Direito e não um Privilégio
+Tipo: Marketplace de terapia online com foco social
+Metodologia: TRG (Terapia de Reprocessamento Generativo)
+
+Modelo de Negócio:
+
+Preços: R$ 29,99/sessão (pacote 4x) ou R$ 49,99 avulsa
+Primeira sessão: Gratuita (30min)
+Atendimento: 100% online (WhatsApp, Zoom, Meet)
+Time: 25+ terapeutas certificados
+
+Funcionalidades Principais do Site:
+
+Landing page com proposta de valor
+Galeria de terapeutas com perfis e especializações
+Botões de agendamento (WhatsApp direto)
+Formulário para terapeutas se candidatarem
+FAQ sobre processo e metodologia TRG
+Seção de impacto social (300+ atendidos)
+
+Estrutura do Site (Seções):
+
+Hero + Proposta de valor
+Metodologia TRG (5 protocolos)
+Galeria de terapeutas
+Benefícios da terapia
+Preços e como funciona
+Trabalhe conosco
+FAQ
+Contato
+
+Design Requisitos:
+
+Moderno, acolhedor, profissional
+Cores suaves (azuis/roxos para confiança)
+Mobile-first
+CTAs claros para agendamento
+Foco na conversão
+
+Objetivo: Criar um site que seja um marketplace funcional onde pessoas escolhem terapeutas e agendam facilmente, mantendo o aspecto social e acessível do projeto.

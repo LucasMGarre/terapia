@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossos Terapeutas - Terapia Pra Todos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-navy': '#1e2a3a',
+                        'navy': '#2c3e50',
+                        'turquoise': '#1abc9c',
+                        'light-turquoise': '#48c9b0'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-bg {
+            background: linear-gradient(135deg, #1e2a3a 0%, #2c3e50 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #1abc9c, #48c9b0);
+            border-radius: 0 0 0 100%;
+            z-index: 1;
+        }
+
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 188, 156, 0.3);
+        }
+
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .modal {
+            display: none;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #1abc9c, #48c9b0);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .therapist-card {
+            transition: all 0.3s ease;
+        }
+
+        .therapist-card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+
+    <!-- Header Section -->
+    <section class="hero-bg py-16">
+        <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
+            <div class="fade-in">
+                <a href="index.html"
+                    class="inline-flex items-center text-turquoise hover:text-light-turquoise mb-6 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span class="text-sm">Voltar ao Início</span>
+                </a>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 text-shadow">
+                    Nossos <span class="text-turquoise">Terapeutas</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Profissionais especializados em TRG prontos para te acolher com dedicação e cuidado
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filtros e Busca -->
+    <section class="py-12 bg-white border-b">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto">
+
+                <!-- Barra de Busca -->
+                <div class="mb-8">
+                    <div class="relative max-w-md mx-auto">
+                        <input type="text" id="search-input" placeholder="Buscar terapeuta por nome ou especialidade..."
+                            class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-full focus:border-turquoise focus:outline-none transition-colors">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Filtros por Especialidade -->
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-navy mb-4">Filtrar por Especialidade</h3>
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        <button
+                            class="filter-btn active px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="all">
+                            Todos os Terapeutas
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="ansiedade">
+                            Ansiedade
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="depressao">
+                            Depressão
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="traumas">
+                            Traumas
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="relacionamentos">
+                            Relacionamentos
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-full border-2 border-turquoise text-turquoise hover:bg-turquoise hover:text-white transition-all"
+                            data-filter="autoestima">
+                            Autoestima
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid de Terapeutas -->
+    <section class="py-16">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto" id="therapists-grid">
+
+                <!-- Gisseli Barbosa -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="ansiedade depressao traumas">
+                    <div class="relative">
+                        <img src="fotos/gissele.avif" alt="Gisseli Barbosa" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Master TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Gisseli Barbosa</h3>
+                        <p class="text-gray-600 text-sm mb-4">CITRG 15.711 • 54 anos</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Especializada em libertar mulheres de traumas, fobias, ansiedades e depressão. Base cristã
+                            sólida.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Traumas</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Ansiedade</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Depressão</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('gisseli')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('gisseli')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delma Quirino -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="relacionamentos traumas ansiedade autoestima">
+                    <div class="relative">
+                        <img src="fotos/delma.avif" alt="Delma Quirino Martins" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-navy text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Terapeuta TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Delma Quirino Martins</h3>
+                        <p class="text-gray-600 text-sm mb-4">Educadora e Terapeuta</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Especialista em relacionamentos abusivos, traumas da infância e empoderamento pessoal.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Relacionamentos</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Traumas</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Autoestima</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('delma')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('delma')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neusa Barbosa -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="autoestima relacionamentos">
+                    <div class="relative">
+                        <img src="fotos/neusa.avif" alt="Neusa Barbosa" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-light-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Terapeuta TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Neusa Barbosa</h3>
+                        <p class="text-gray-600 text-sm mb-4">Especialista em Recomeços</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Focada no empoderamento feminino e recuperação emocional pós-divórcio.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Empoderamento</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Recomeços</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Autoestima</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('neusa')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('neusa')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eva Fernandes -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="ansiedade traumas">
+                    <div class="relative">
+                        <img src="fotos/eva.avif" alt="Eva Fernandes" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Terapeuta TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Eva Fernandes</h3>
+                        <p class="text-gray-600 text-sm mb-4">Fisioterapeuta e Terapeuta</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Católica, mãe de 3 filhos. Especializada em TRG e Leitura Corporal.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">TRG</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Leitura
+                                Corporal</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('eva')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('eva')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ivete de Vargas -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="traumas depressao relacionamentos">
+                    <div class="relative">
+                        <img src="fotos/ivete.avif" alt="Ivete de Vargas" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Master TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Ivete de Vargas</h3>
+                        <p class="text-gray-600 text-sm mb-4">Master Terapeuta TRG</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Especialista em traumas, bloqueios e terapia de casais em crise.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Traumas</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Casais</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Depressão</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('ivete')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('ivete')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Letícia Fogaça -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="traumas autoestima">
+                    <div class="relative">
+                        <img src="fotos/leticia.avif" alt="Letícia Fogaça" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Master TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Letícia Fogaça</h3>
+                        <p class="text-gray-600 text-sm mb-4">Administradora e Master Terapeuta</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Formada em 2004, especializada em dissolver traumas e proporcionar leveza.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Traumas</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Transformação</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('leticia')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('leticia')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bruno Meira -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="relacionamentos traumas">
+                    <div class="relative">
+                        <img src="fotos/bruno.avif" alt="Bruno Meira" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-navy text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Terapeuta TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Bruno Meira</h3>
+                        <p class="text-gray-600 text-sm mb-4">Terapeuta Especializado</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Foco em abandono, conflitos relacionais e transtornos alimentares.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Abandono</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Relacionamentos</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Alimentares</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('bruno')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('bruno')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rita Franco -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="depressao ansiedade autoestima">
+                    <div class="relative">
+                        <img src="fotos/rita.avif" alt="Rita Franco" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Terapeuta TRG
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Rita Franco</h3>
+                        <p class="text-gray-600 text-sm mb-4">Terapeuta Emocional</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Especialista em mulheres com depressão, ansiedade e baixa autoestima.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Depressão</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Ansiedade</span>
+                            <span
+                                class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Autoestima</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('rita')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('rita')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Joelma Lima -->
+                <div class="therapist-card card-hover bg-white rounded-2xl shadow-lg overflow-hidden"
+                    data-specialties="ansiedade depressao traumas">
+                    <div class="relative">
+                        <img src="fotos/joelma.avif" alt="Joelma Lima" class="w-full h-48 object-cover">
+                        <div
+                            class="absolute top-4 right-4 bg-turquoise text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Neuropsicanalista
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-navy mb-2">Joelma Lima</h3>
+                        <p class="text-gray-600 text-sm mb-4">Terapeuta TRG e Neuropsicanalista</p>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                            Especialista em traumas profundos e abuso sexual. Inteligência emocional.
+                        </p>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Traumas</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Abuso</span>
+                            <span class="bg-turquoise/10 text-turquoise px-2 py-1 rounded-full text-xs">Ansiedade</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-2 px-4 rounded-full text-sm flex-1"
+                                onclick="openWhatsApp('joelma')">
+                                <i class="fas fa-whatsapp mr-1"></i> Agendar
+                            </button>
+                            <button
+                                class="btn-hover border border-turquoise text-turquoise hover:bg-turquoise hover:text-white py-2 px-3 rounded-full text-sm"
+                                onclick="openModal('joelma')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center mt-16">
+                <div
+                    class="bg-gradient-to-r from-navy to-turquoise rounded-2xl p-8 md:p-12 text-white max-w-4xl mx-auto">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">
+                        Não Encontrou o Terapeuta Ideal?
+                    </h3>
+                    <p class="text-lg opacity-90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                        Nossa equipe pode te ajudar a encontrar o profissional que melhor se encaixa com suas
+                        necessidades específicas.
+                    </p>
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <button onclick="openWhatsApp('geral')"
+                            class="btn-hover bg-white text-navy font-semibold py-4 px-8 rounded-full hover:bg-gray-100 transition-all duration-300">
+                            <i class="fas fa-whatsapp mr-2"></i>
+                            Falar com Nossa Equipe
+                        </button>
+                        <button onclick="window.location.href='index.html'"
+                            class="btn-hover border-2 border-white text-white hover:bg-white hover:text-navy font-semibold py-4 px-8 rounded-full transition-all duration-300">
+                            <i class="fas fa-home mr-2"></i>
+                            Voltar ao Início
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Modal para Detalhes dos Terapeutas -->
+    <div id="therapist-modal" class="modal fixed inset-0 z-50 modal-overlay">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h2 id="modal-title" class="text-2xl font-bold text-navy"></h2>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row gap-6">
+
+                        <!-- Foto do Terapeuta -->
+                        <div class="md:w-1/3">
+                            <img id="modal-photo" src="" alt="" class="w-full h-48 md:h-64 object-cover rounded-xl">
+                            <div class="mt-4 text-center">
+                                <button onclick="openWhatsAppFromModal()"
+                                    class="btn-hover btn-primary bg-turquoise hover:bg-light-turquoise text-white font-semibold py-3 px-6 rounded-full text-sm w-full">
+                                    <i class="fas fa-whatsapp mr-2"></i>
+                                    Agendar Sessão
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Informações Detalhadas -->
+                        <div class="md:w-2/3">
+                            <div id="modal-content" class="space-y-4">
+                                <!-- Conteúdo será inserido dinamicamente via JavaScript -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let currentTherapist = '';
+
+        // Dados detalhados dos terapeutas
+        const therapistsData = {
+            gisseli: {
+                name: "Gisseli Barbosa",
+                photo: "fotos/gissele.avif",
+                title: "Master Terapeuta TRG",
+                credentials: "CITRG 15.711 • 54 anos",
+                description: "Master terapeuta da TRG com formação pelo Instituto Brasileiro de Formação de Terapeutas (IBFT) e registro na CITRG 15.711. Com 54 anos de vida e uma forte base cristã, meu propósito é ajudar mulheres a se libertarem de traumas, fobias, ansiedades, depressão e dores emocionais, permitindo que elas vivam de forma mais leve e plena.",
+                specialties: ["Traumas", "Fobias", "Ansiedade", "Depressão", "Dores Emocionais"],
+                approach: "Abordagem baseada na fé cristã com foco no acolhimento feminino."
+            },
+            delma: {
+                name: "Delma Quirino Martins",
+                photo: "fotos/delma.avif",
+                title: "Terapeuta TRG",
+                credentials: "Educadora e Terapeuta",
+                description: "Depois de alguns anos ajudando pessoas como educadora e mulher, hoje me dedico a uma missão mais profunda: libertar mulheres e homens das correntes emocionais invisíveis que impedem a felicidade. Atuo acolhendo e tratando dores como relacionamento abusivo e narcisista, traumas da infância, depressão, vazio emocional, ansiedade, autoestima, culpa, medo e autocobrança.",
+                specialties: ["Relacionamentos Abusivos", "Traumas da Infância", "Depressão", "Vazio Emocional", "Autoestima"],
+                approach: "Especialista em libertar pessoas de padrões emocionais destrutivos."
+            },
+            neusa: {
+                name: "Neusa Barbosa",
+                photo: "fotos/neusa.avif",
+                title: "Terapeuta TRG",
+                credentials: "Especialista em Recomeços",
+                description: "Após o divórcio, vivi uma transformação pessoal profunda. Com o uso da TRG, superei traumas e emoções que me impediam de seguir em frente. Hoje, compartilho essa experiência para ajudar mulheres a se reconectarem com sua força interior e a se reerguerem com confiança. Ofereço apoio em empoderamento feminino e na recuperação emocional de mulheres em recomeços de vida, especialmente após o divórcio.",
+                specialties: ["Empoderamento Feminino", "Recomeços", "Pós-Divórcio", "Autoconfiança", "Força Interior"],
+                approach: "Focada no empoderamento e reconstrução da autoestima feminina."
+            },
+            eva: {
+                name: "Eva Fernandes",
+                photo: "fotos/eva.avif",
+                title: "Terapeuta TRG",
+                credentials: "Fisioterapeuta e Terapeuta",
+                description: "Sou fisioterapeuta, católica, casada e mãe de três filhos. Recentemente concluí o curso de Terapia de Reprocessamento Generativo (TRG) e Leitura Corporal. Agora início uma nova fase como terapeuta, me inscrevendo nesta plataforma com o propósito de tornar a terapia acessível a todas as pessoas que precisam de acolhimento e transformação. Entre meus principais valores estão a fé, a família, e o compromisso com a verdade.",
+                specialties: ["TRG", "Leitura Corporal", "Acolhimento", "Transformação Pessoal"],
+                approach: "Combinação única de fisioterapia com terapia emocional baseada na fé."
+            },
+            ivete: {
+                name: "Ivete de Vargas",
+                photo: "fotos/ivete.avif",
+                title: "Master Terapeuta TRG",
+                credentials: "Master Terapeuta Especializada",
+                description: "Por muito tempo, busquei um método que me permitisse transformar vidas de forma profunda e verdadeira. Encontrei essa missão na Terapia TRG – um caminho que liberta. Me dedico a ajudar pessoas que carregam traumas, dores emocionais e bloqueios que travam seu crescimento pessoal e profissional. Também ofereço suporte especializado para casais em crise e indivíduos enfrentando a depressão.",
+                specialties: ["Traumas", "Bloqueios Emocionais", "Terapia de Casais", "Depressão", "Crescimento Profissional"],
+                approach: "Especialista em transformação profunda e terapia de casais."
+            },
+            leticia: {
+                name: "Letícia Fogaça",
+                photo: "fotos/leticia.avif",
+                title: "Master Terapeuta TRG",
+                credentials: "Administradora e Master Terapeuta",
+                description: "Desde cedo trabalhei no comércio e me formei em Administração em 2004. Por amar trabalhar e me conectar com pessoas, em 2022 escolhi buscar a TRG para uma nova formação e tenho realizado atendimentos como Master Terapeuta desde então. Ajudo pessoas a terem as rédeas da sua vida de volta, dissolvendo traumas e vivenciando uma vida com muito mais leveza. Amo ver a transformação da pessoa a cada sessão e poder fazer parte disso.",
+                specialties: ["Traumas", "Transformação Pessoal", "Leveza Emocional", "Retomada de Controle"],
+                approach: "Focada em devolver o controle da vida às pessoas através da dissolução de traumas."
+            },
+            bruno: {
+                name: "Bruno Meira",
+                photo: "fotos/bruno.avif",
+                title: "Terapeuta TRG",
+                credentials: "Terapeuta Especializado",
+                description: "Ajudo pessoas que carregam dores de abandono, conflitos nos relacionamentos ou transtornos alimentares, a se libertarem desses ciclos e viverem bem. Vou te acolher com respeito, sem julgamentos, interpretando os sinais do seu corpo, da sua história e das emoções que te cercam, para te ajudar a reconstruir.",
+                specialties: ["Dores de Abandono", "Conflitos Relacionais", "Transtornos Alimentares", "Leitura Corporal"],
+                approach: "Acolhimento respeitoso com foco na leitura dos sinais corporais e emocionais."
+            },
+            rita: {
+                name: "Rita Franco",
+                photo: "fotos/rita.avif",
+                title: "Terapeuta Emocional TRG",
+                credentials: "Terapeuta Emocional",
+                description: "Sou Rita de Cássia Ferreira Campos Franco, terapeuta emocional especializada em TRG. Atendo mulheres que enfrentam depressão, ansiedade, síndrome do pânico, baixa autoestima e falta de amor próprio. Que desejam se reconectar com sua essência, despertando autoestima, autoconfiança e amor próprio. Atendimentos com escuta empática, segura e sem julgamentos.",
+                specialties: ["Depressão", "Ansiedade", "Síndrome do Pânico", "Baixa Autoestima", "Amor Próprio"],
+                approach: "Escuta empática e segura focada no despertar da autoestima feminina."
+            },
+            joelma: {
+                name: "Joelma Lima",
+                photo: "fotos/joelma.avif",
+                title: "Terapeuta TRG e Neuropsicanalista",
+                credentials: "Neuropsicanalista e Psicanalista Clínica",
+                description: "Sou Terapeuta TRG, Neuropsicanalista, Psicanalista Clínica e Pós-graduada em Psicologia Positiva. Especialista em Inteligência Emocional e Comportamental. Ajudo mulheres a reprocessar dores emocionais profundas como: ansiedade, depressão, traumas e travas emocionais, desmotivação profissional, marcas silenciosas do abuso sexual. Você não precisa carregar isso sozinha.",
+                specialties: ["Abuso Sexual", "Traumas Profundos", "Desmotivação Profissional", "Inteligência Emocional", "Ansiedade"],
+                approach: "Abordagem multidisciplinar combinando TRG, neuropsicanalise e psicologia positiva."
+            }
+        };
+
+        // Função para abrir modal
+        function openModal(therapistId) {
+            currentTherapist = therapistId;
+            const data = therapistsData[therapistId];
+
+            document.getElementById('modal-title').textContent = data.name;
+            document.getElementById('modal-photo').src = data.photo;
+            document.getElementById('modal-photo').alt = data.name;
+
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="mb-4">
+                    <h4 class="font-semibold text-navy mb-2">${data.title}</h4>
+                    <p class="text-sm text-gray-600 mb-4">${data.credentials}</p>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-semibold text-navy mb-3">Sobre a Terapeuta</h4>
+                    <p class="text-gray-700 leading-relaxed text-sm">${data.description}</p>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-semibold text-navy mb-3">Especialidades</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${data.specialties.map(spec => `<span class="bg-turquoise/10 text-turquoise px-3 py-1 rounded-full text-xs">${spec}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-navy mb-3">Abordagem Terapêutica</h4>
+                    <p class="text-gray-700 text-sm italic">${data.approach}</p>
+                </div>
+                
+                <div class="bg-turquoise/5 rounded-lg p-4 border-l-4 border-turquoise">
+                    <p class="text-sm text-gray-700">
+                        <i class="fas fa-gift text-turquoise mr-2"></i>
+                        <strong>Primeira sessão gratuita</strong> de 30 minutos para você conhecer a terapeuta e tirar suas dúvidas.
+                    </p>
+                </div>
+            `;
+
+            document.getElementById('therapist-modal').classList.add('active');
+        }
+
+        // Função para fechar modal
+        function closeModal() {
+            document.getElementById('therapist-modal').classList.remove('active');
+        }
+
+        // Função para abrir WhatsApp do modal
+        function openWhatsAppFromModal() {
+            openWhatsApp(currentTherapist);
+            closeModal();
+        }
+
+        // Função para abrir WhatsApp
+        function openWhatsApp(therapistId) {
+            const messages = {
+                gisseli: "Olá, Gisseli! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                delma: "Olá, Delma! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                neusa: "Olá, Neusa! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                eva: "Olá, Eva! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                ivete: "Olá, Ivete! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                leticia: "Olá, Letícia! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                bruno: "Olá, Bruno! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                rita: "Olá, Rita! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                joelma: "Olá, Joelma! Vi seu perfil no Terapia Pra Todos e gostaria de agendar a primeira sessão gratuita.",
+                geral: "Olá! Vi o site Terapia Pra Todos e gostaria de ajuda para encontrar o terapeuta ideal para o meu caso."
+            };
+
+            // Substitua pelos números reais do WhatsApp
+            const phoneNumbers = {
+                gisseli: "5511999999999",
+                delma: "5511999999999",
+                neusa: "5511999999999",
+                eva: "5511999999999",
+                ivete: "5511999999999",
+                leticia: "5511999999999",
+                bruno: "5511999999999",
+                rita: "5511999999999",
+                joelma: "5511999999999",
+                geral: "5511999999999"
+            };
+
+            const message = messages[therapistId] || messages.geral;
+            const phone = phoneNumbers[therapistId] || phoneNumbers.geral;
+
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // Sistema de filtros
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const therapistCards = document.querySelectorAll('.therapist-card');
+            const searchInput = document.getElementById('search-input');
+
+            // Filtros por categoria
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const filter = this.getAttribute('data-filter');
+
+                    // Atualizar botão ativo
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Filtrar cards
+                    therapistCards.forEach(card => {
+                        if (filter === 'all') {
+                            card.classList.remove('hidden');
+                        } else {
+                            const specialties = card.getAttribute('data-specialties');
+                            if (specialties && specialties.includes(filter)) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Busca por texto
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+
+                therapistCards.forEach(card => {
+                    const name = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    const specialties = card.getAttribute('data-specialties').toLowerCase();
+
+                    if (name.includes(searchTerm) || description.includes(searchTerm) || specialties.includes(searchTerm)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Fechar modal clicando fora
+            document.getElementById('therapist-modal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Animações ao carregar
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            therapistCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.8s ease-out ${index * 0.1}s, transform 0.8s ease-out ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
