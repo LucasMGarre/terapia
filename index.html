@@ -199,10 +199,12 @@
 
                     <!-- Botão: Sou Terapeuta -->
                     <button
-                        class="btn-hover btn-secondary border-2 border-white text-white hover:bg-white hover:text-navy font-semibold py-4 px-8 rounded-full text-lg flex items-center gap-3 w-full md:w-auto shadow-xl">
+                        class="btn-hover btn-secondary border-2 border-white text-white hover:bg-white hover:text-navy font-semibold py-4 px-8 rounded-full text-lg flex items-center gap-3 w-full md:w-auto shadow-xl"
+                        onclick="window.location.href='terapeuta.html';">
                         <i class="fas fa-user-md text-xl"></i>
                         <span>Sou Terapeuta</span>
                     </button>
+
 
                 </div>
 
@@ -417,16 +419,14 @@
                         Convidamos você a fazer parte desta jornada de cura e esperança.
                     </p>
                     <div class="flex flex-col md:flex-row gap-4 justify-center">
-                        <button id="btn-conhecer-terapeutas"
-                            class="btn-hover bg-white text-navy font-semibold py-4 px-8 rounded-full hover:bg-gray-100 transition-all duration-300">
-                            <i class="fas fa-users mr-2"></i>
-                            Conheça Nossos Terapeutas
-                        </button>
-                        <!-- <button id="btn-fale-conosco"
-                            class="btn-hover border-2 border-white text-white hover:bg-white hover:text-navy font-semibold py-4 px-8 rounded-full transition-all duration-300">
-                            <i class="fas fa-whatsapp mr-2"></i>
-                            Fale Conosco
-                        </button> -->
+                    <button id="btn-conhecer-terapeutas"
+                        class="btn-hover bg-white text-navy font-semibold py-4 px-8 rounded-full hover:bg-gray-100 transition-all duration-300"
+                        onclick="window.location.href='profissionais.html';">
+                        <i class="fas fa-users mr-2"></i>
+                        Conheça Nossos Terapeutas
+                    </button>
+
+
                     </div>
                 </div>
             </div>
@@ -439,14 +439,6 @@
         // Adicionar eventos aos botões
         document.addEventListener('DOMContentLoaded', function () {
 
-
-            // Botão Sou Terapeuta (Hero)
-            const btnProfissional = document.querySelector('.btn-secondary');
-            btnProfissional.addEventListener('click', function () {
-                // Por enquanto um alert, depois vai para formulário
-                alert('Redirecionando para formulário de cadastro...');
-            });
-
             // Scroll suave para a seção sobre nós quando clicar na seta
             const scrollIndicator = document.querySelector('.floating-animation');
             scrollIndicator.addEventListener('click', function () {
@@ -456,11 +448,7 @@
                 });
             });
 
-            // Botão Conhecer Terapeutas (Sobre Nós)
-            const btnConhecerTerapeutas = document.getElementById('btn-conhecer-terapeutas');
-            btnConhecerTerapeutas.addEventListener('click', function () {
-                alert('Redirecionando para galeria de terapeutas...');
-            });
+
 
             // Botão Fale Conosco (Sobre Nós)
             const btnFaleConosco = document.getElementById('btn-fale-conosco');
